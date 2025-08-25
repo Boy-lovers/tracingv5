@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkTracker - Advanced URL Tracking Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .map-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-link text-purple-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">LinkTracker</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <button id="clearData" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300">
+                        <i class="fas fa-trash mr-2"></i>Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="gradient-bg rounded-2xl p-8 text-white mb-8">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl font-bold mb-4">Advanced URL Tracking Platform</h1>
+                <p class="text-xl mb-6 opacity-90">Create intelligent tracking links that capture location, device information, and engagement metrics when opened.</p>
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 rounded-full p-3">
+                        <i class="fas fa-map-marker-alt text-2xl"></i>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-full p-3">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-full p-3">
+                        <i class="fas fa-shield-alt text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Create Link Form -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-plus-circle text-purple-600 mr-3"></i>
+                    Create New Tracking Link
+                </h2>
+                
+                <form id="trackingForm" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Destination URL</label>
+                        <input 
+                            type="url" 
+                            id="destinationUrl" 
+                            placeholder="https://example.com" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            required
+                        >
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Link Name (Optional)</label>
+                        <input 
+                            type="text" 
+                            id="linkName" 
+                            placeholder="Marketing Campaign - Summer 2024" 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        >
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiration</label>
+                            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option>Never</option>
+                                <option>1 Day</option>
+                                <option>7 Days</option>
+                                <option>30 Days</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Max Clicks</label>
+                            <input 
+                                type="number" 
+                                placeholder="Unlimited" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            >
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 flex items-center justify-center pulse"
+                    >
+                        <i class="fas fa-magic mr-2"></i>
+                        Generate Tracking Link
+                    </button>
+                </form>
+
+                <!-- Generated Link -->
+                <div id="generatedLink" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg hidden">
+                    <h3 class="text-green-800 font-semibold mb-2 flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Tracking Link Created!
+                    </h3>
+                    <div class="flex items-center space-x-2">
+                        <input 
+                            type="text" 
+                            id="trackingUrl" 
+                            readonly 
+                            class="flex-1 px-3 py-2 border border-green-300 rounded text-green-700 bg-white"
+                        >
+                        <button 
+                            onclick="copyToClipboard()" 
+                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition duration-300"
+                        >
+                            <i class="fas fa-copy mr-1"></i>Copy
+                        </button>
+                    </div>
+                    <p class="text-green-600 text-sm mt-2">This link will capture location and device information when opened.</p>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-chart-bar text-blue-600 mr-3"></i>
+                    Tracking Dashboard
+                </h2>
+
+                <!-- Stats Overview -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-blue-600" id="totalLinks">0</div>
+                        <div class="text-sm text-blue-800">Total Links</div>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-green-600" id="totalClicks">0</div>
+                        <div class="text-sm text-green-800">Total Clicks</div>
+                    </div>
+                </div>
+
+                <!-- Tracking List -->
+                <div class="space-y-4">
+                    <h3 class="font-semibold text-gray-700 mb-3">Recent Tracking Activity</h3>
+                    <div id="trackingList" class="space-y-3 max-h-96 overflow-y-auto">
+                        <div class="text-center text-gray-500 py-8">
+                            <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                            <p>No tracking data yet. Create your first link to get started!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Visualization -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mt-8 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-globe-americas text-red-600 mr-3"></i>
+                Location Visualization
+            </h2>
+            <div class="map-container rounded-lg p-8 text-center">
+                <i class="fas fa-map-marked-alt text-6xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600">Location data will appear here when tracking links are opened</p>
+                <p class="text-sm text-gray-500 mt-2">Interactive map showing all click locations</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p>&copy; 2024 LinkTracker. Advanced URL tracking platform.</p>
+                <p class="text-gray-400 text-sm mt-2">Privacy-focused tracking solutions</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize data storage
+        function initializeStorage() {
+            if (!localStorage.getItem('trackingLinks')) {
+                localStorage.setItem('trackingLinks', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('trackingData')) {
+                localStorage.setItem('trackingData', JSON.stringify([]));
+            }
+            updateDashboard();
+        }
+
+        // Generate tracking link
+        document.getElementById('trackingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const destinationUrl = document.getElementById('destinationUrl').value;
+            const linkName = document.getElementById('linkName').value || 'Unnamed Link';
+            const trackingId = generateUniqueId();
+            
+            const trackingUrl = `${window.location.origin}${window.location.pathname}?track=${trackingId}&redirect=${encodeURIComponent(destinationUrl)}`;
+            
+            // Save tracking link
+            const links = JSON.parse(localStorage.getItem('trackingLinks'));
+            links.push({
+                id: trackingId,
+                name: linkName,
+                destination: destinationUrl,
+                created: new Date().toISOString(),
+                clicks: 0
+            });
+            localStorage.setItem('trackingLinks', JSON.stringify(links));
+            
+            // Show generated link
+            document.getElementById('trackingUrl').value = trackingUrl;
+            document.getElementById('generatedLink').classList.remove('hidden');
+            
+            updateDashboard();
+        });
+
+        // Generate unique ID
+        function generateUniqueId() {
+            return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const input = document.getElementById('trackingUrl');
+            input.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+            button.classList.add('bg-green-700');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-700');
+            }, 2000);
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const links = JSON.parse(localStorage.getItem('trackingLinks'));
+            const trackingData = JSON.parse(localStorage.getItem('trackingData'));
+            
+            // Update stats
+            document.getElementById('totalLinks').textContent = links.length;
+            document.getElementById('totalClicks').textContent = trackingData.length;
+            
+            // Update tracking list
+            const trackingList = document.getElementById('trackingList');
+            if (trackingData.length === 0) {
+                trackingList.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-inbox text-4xl mb-3 opacity-50"></i>
+                        <p>No tracking data yet. Create your first link to get started!</p>
+                    </div>
+                `;
+            } else {
+                trackingList.innerHTML = trackingData.slice(-5).reverse().map(item => `
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="font-semibold text-gray-800">${getLinkName(item.trackingId)}</span>
+                            <span class="text-sm text-gray-500">${new Date(item.timestamp).toLocaleString()}</span>
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            <div class="flex items-center mb-1">
+                                <i class="fas fa-map-marker-alt text-red-500 mr-2"></i>
+                                ${item.location ? `${item.location.city}, ${item.location.country}` : 'Location not available'}
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-desktop text-blue-500 mr-2"></i>
+                                ${item.device || 'Unknown device'}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Get link name from ID
+        function getLinkName(trackingId) {
+            const links = JSON.parse(localStorage.getItem('trackingLinks'));
+            const link = links.find(l => l.id === trackingId);
+            return link ? link.name : 'Unknown Link';
+        }
+
+        // Clear all data
+        document.getElementById('clearData').addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all tracking data? This cannot be undone.')) {
+                localStorage.setItem('trackingLinks', JSON.stringify([]));
+                localStorage.setItem('trackingData', JSON.stringify([]));
+                updateDashboard();
+                alert('All data has been cleared.');
+            }
+        });
+
+        // Check if this is a tracking link
+        function checkForTracking() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const trackingId = urlParams.get('track');
+            const redirectUrl = urlParams.get('redirect');
+            
+            if (trackingId && redirectUrl) {
+                // Capture tracking data
+                captureTrackingData(trackingId, redirectUrl);
+            }
+        }
+
+        // Capture tracking data
+        async function captureTrackingData(trackingId, redirectUrl) {
+            const trackingData = {
+                trackingId: trackingId,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                platform: navigator.platform,
+                device: getDeviceType(),
+                location: null
+            };
+
+            // Try to get geolocation
+            if (navigator.geolocation) {
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 5000,
+                            maximumAge: 0
+                        });
+                    });
+                    
+                    // Reverse geocode to get location details (simplified for demo)
+                    trackingData.location = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        city: 'Estimated from coordinates',
+                        country: 'Estimated from coordinates'
+                    };
+                    
+                } catch (error) {
+                    console.log('Geolocation not available or denied');
+                }
+            }
+
+            // Save tracking data
+            const existingData = JSON.parse(localStorage.getItem('trackingData'));
+            existingData.push(trackingData);
+            localStorage.setItem('trackingData', JSON.stringify(existingData));
+            
+            // Update link click count
+            const links = JSON.parse(localStorage.getItem('trackingLinks'));
+            const linkIndex = links.findIndex(l => l.id === trackingId);
+            if (linkIndex !== -1) {
+                links[linkIndex].clicks += 1;
+                localStorage.setItem('trackingLinks', JSON.stringify(links));
+            }
+            
+            // Redirect to destination
+            window.location.href = decodeURIComponent(redirectUrl);
+        }
+
+        // Get device type
+        function getDeviceType() {
+            const ua = navigator.userAgent;
+            if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                return 'Mobile';
+            } else if (/Tablet|iPad|PlayBook|Silk|Android(?!.*Mobile)/.test(ua)) {
+                return 'Tablet';
+            }
+            return 'Desktop';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStorage();
+            checkForTracking();
+        });
+    </script>
+</body>
+</html>
+
